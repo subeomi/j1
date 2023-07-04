@@ -12,4 +12,10 @@ public interface TodoService {
 
     TodoDTO register(TodoDTO dto);
 
+    TodoDTO getOne(Long tno);
+
+    // MyBatis는 삭제시 int 반환, JPA는 void.
+    void remove(Long tno);
+
+    void modify(TodoDTO dto);
 }
