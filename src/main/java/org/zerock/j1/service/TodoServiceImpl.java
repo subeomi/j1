@@ -39,12 +39,10 @@ public class TodoServiceImpl implements TodoService{
         .map(todo -> modelMapper.map(todo, TodoDTO.class))
         .collect(Collectors.toList());
 
-        PageResponseDTO<TodoDTO> response = new PageResponseDTO<>();
-
-        response.setDtoList(dtoList);
-
-        return response;
-
+        // PageResponseDTO<TodoDTO> response = new PageResponseDTO<>();
+        // response.setDtoList(dtoList);
+        // return response;
+        return null;
     }
 
     @Override
