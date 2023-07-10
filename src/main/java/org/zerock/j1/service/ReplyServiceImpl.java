@@ -1,6 +1,7 @@
 package org.zerock.j1.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -41,10 +42,13 @@ public class ReplyServiceImpl implements ReplyService {
 
             // 전체 댓글 수를 size로 나눠서 총 페이지 수를 계산한 후 pageNum에 넣음 예) 52/50.0 = 1.04 -> 올리면 2
             pageNum = (int)(Math.ceil(totalCount/(double)requestDTO.getSize()));
+
+            // pageNum이 0이면 밑에서 -1이 되어 문제가 생기기 때문에 그에대한 조치
+            pageNum = pageNum <= 0? 1: pageNum;
         }
 
         // 페이지어블 생성. PageRequest.of(페이지 번호, 페이지의 사이즈, 정렬 기준(rno로 오름차순 어센딩)
-        Pageable pageable = PageRequest.of(pageNum -1, requestDTO.getSize(), Sort.by("rno").ascending());
+        Pageable pageable = PageRequest.of(pageNum -1 , requestDTO.getSize(), Sort.by("rno").ascending() );
 
         // pageable의 결과물인 Page타입 객체. 해당 bno의 해당 댓글페이지의 댓글을 가져온다
         Page<Reply> result = replyRepository.listBoard(requestDTO.getBno(), pageable);
@@ -66,6 +70,58 @@ public class ReplyServiceImpl implements ReplyService {
 
         // 최종 댓글 데이터 반환
         return responseDTO;
+    }
+
+    @Override
+    public Long register(ReplyDTO replyDTO) {
+        
+        // replyDTO를 Reply 엔티티클래스 형태로 변환(map)하여 Reply reply에 담는다
+        Reply reply = modelMapper.map(replyDTO, Reply.class);
+
+        log.info("reply...");
+        log.info(reply);
+
+        Long newRno = replyRepository.save(reply).getRno();
+
+        return newRno;
+    }
+
+    @Override
+    public ReplyDTO read(Long rno) {
+        
+        Optional<Reply> result = replyRepository.findById(rno);
+
+        Reply reply = result.orElseThrow();
+
+        return modelMapper.map(reply, ReplyDTO.class);
+
+    }
+
+    @Override
+    public void remove(Long rno) {
+        
+        Optional<Reply> result = replyRepository.findById(rno);
+
+        Reply reply = result.orElseThrow();
+
+        reply.changeText("해당 글은 삭제되었습니다.");
+        reply.changeFile(null);
+
+        replyRepository.save(reply);
+    }
+
+    @Override
+    public void modify(ReplyDTO replyDTO) {
+        
+        Optional<Reply> result = replyRepository.findById(replyDTO.getRno());
+
+        Reply reply = result.orElseThrow();
+
+        reply.changeText(replyDTO.getReplyText());
+        reply.changeFile(replyDTO.getReplyFile());
+
+        replyRepository.save(reply);
+
     }
     
 }

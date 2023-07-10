@@ -16,4 +16,7 @@ public class ReplyDTO {
     private String replyFile;
 
     private String replyer;
+
+    private Long bno;
+
 }

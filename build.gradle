@@ -70,5 +70,9 @@ sourceSets {
     }
 }
 
-compileJava.dependsOn('clean')
-compileTestJava.dependsOn('clean')
+task deleteBuild(type: Delete){
+	delete "$projectDir/build/generated/sources/annotations/"
+}
+
+compileJava.dependsOn('deleteBuild: clean')
+// compileTestJava.dependsOn('clean')

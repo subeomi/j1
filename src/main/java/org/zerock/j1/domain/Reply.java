@@ -36,4 +36,13 @@ public class Reply {
     // 내가 필요한 순간까지 조회하지 않겠다.
     @ManyToOne(fetch = FetchType.LAZY) 
     private Board board;
+
+    public void changeText(String text) {
+        this.replyText = text;
+    }
+
+    public void changeFile(String fileName){
+        this.replyFile = fileName;
+    }
+
 }

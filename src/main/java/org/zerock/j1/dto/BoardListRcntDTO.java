@@ -1,5 +1,7 @@
 package org.zerock.j1.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +19,6 @@ public class BoardListRcntDTO {
     private String title;
     private String writer;
     private long replyCount;
+    private LocalDateTime regDate;
 
 }
